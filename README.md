@@ -9,14 +9,17 @@ The steps I'm working with are to:
 
 [ ] Concatenate files inside the NAS. Test for integrity of file
 
-[ ] Run Kilosort2 automatically on the concatenated dataset
+[x] Run Kilosort2 automatically (based on the .xml) on the concatenated dataset
 
 [ ] Run set of heuristics to automatically merge/exclude clusters from output of kilosort
 
 [ ] Run DeepLabCut on video, extract data
 
+[almost] Synchronize behavior with electrophysiology
+
 [ ] Synchronize video with electrophysiology
 
 
 
-Developed by Eliezyer de Oliveira - 2019
+Developed by Eliezyer de Oliveira - 2019/2020
+
