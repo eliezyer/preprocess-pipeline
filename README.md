@@ -1,13 +1,13 @@
 # preprocess-pipeline
 Code for preprocessing data in brito-sjulson lab.
 
+This pipeline is to use Kilosort 2 through KS2wrapper to spike sort automatically,
+
 The steps I'm working with are to:
 
-[x] Robocopy all the files from my local folder to the my local folder NAS.
+[x] Robocopy all the files from my local folder to the subject NAS folder.
 
-[ ] Create a session folder and put all the files from that animal/date inside the session folder
-
-[ ] Concatenate files inside the NAS. Test for integrity of file
+[almost] Create a session folder and put concatenated files there. Test if file has same size as its components
 
 [x] Run Kilosort2 automatically (based on the .xml) on the concatenated dataset
 
