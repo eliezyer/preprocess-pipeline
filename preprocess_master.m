@@ -52,8 +52,22 @@ for b = 1:length(outputStruct) %looping through the sessions concatenated
     KS2Wrapper(fullfile(local_path,outputStruct(b).sessionName))
 end
 
-%% Get LFP files from original .Dat files
+%% Generate .lfp files from original .dat files
 
+for b = 1:length(outputStruct) %looping through the sessions concatenated
+    
+    new_folder = fullfile(local_path,outputStruct(b).sessionName);
+    new_name   = outputStruct(b).sessionName;
+    par = LoadXml(fullfile(new_folder,[new_name '.xml']));
+    
+    %Running KS2Wrapper on the new files
+    inputName  = fullfile(local_path,outputStruct(b).sessionName,[new_name '.dat']);
+    outputName = fullfile(local_path,outputStruct(b).sessionName,[new_name '.lfp']);
+    const_up   = 1;
+    %this works for 20 kHz or 30 kHz to 1250 Hz or 2000 Hz
+    const_down = par.SampleRate/par.lfpSampleRate; 
+    ResampleBinary(inputName,outputName,par.nChannels,const_up,const_down)
+end
 %% Run set of heuristics to automatically merge/exclude clusters from KS output
 
 
