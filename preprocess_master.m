@@ -28,7 +28,7 @@ outputStruct = ConcatenatingDats(local_path);
 
 
 %% Run spike sorting (Kilosort 2 using KS2Wrapper)
-%if you don't use KS2Wrapper or .xml, skip/comment this part
+%if you don't use KS2Wrapper or .xml, skip/comment line 52 (KS2Wrapper)
 
 %Here is necessary to have .xml in the folder from your original recordings
 %This part of the code copies it to the new folder created
