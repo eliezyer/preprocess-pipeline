@@ -1,0 +1,49 @@
+%% script to preprocess all data locally
+
+%developed by Eliezyer de Oliveira, 2020
+%TO DO:
+% [ ] Compare folders from your local preprocessing folder with over the
+% network
+%% copy unprocessed data over the network locally
+
+%path where the original unprocessed is stored (switch to yours)
+%remember to ommit the last slash!
+original_path = '/mnt/dreaddELIE/Recordings/Elie/D1R114M835/D1R114M835_191122_103106'; 
+
+%path where to copy the data for concatenation and processing (spike sort and etc)
+local_path = '/media/eliezyer/SSD/Preprocessing/'; %better with SSD
+
+if isunix
+     copystring = ['! rsync -a -v -W -c -r ', original_path, ' ',local_path];
+elseif ispc
+    copystring = ['! xcopy /e /v', original_path, ' ',local_path];
+end
+
+%execute comand in catstring
+eval(copystring)
+    
+%% Run concatenating dats, even if you don't need to concatenate, it will
+%make a new folder and prevent of re-running the same files a second time
+outputStruct = ConcatenatingDats(local_path);
+%% Run spike sorting (Kilosort 2 using KS2Wrapper)
+%if you don't use KS2Wrapper or .xml, skip/comment this part
+
+%Here is necessary to have .xml in the folder from your original recordings
+%This part of the code copies it to the new folder created
+for b = 1:length(outputStruct) %looping through the sessions concatenated
+    
+    if isunix
+        copystring = ['! rsync -a -v -W -c -r ', ...
+            fullfile(local_path,outputStruct(b).recording_folders{1},'amplifier_analogin_auxiliary_int16.xml'), ' ',...
+            fullfile(local_path,outputStruct(b).sessionName)];
+    elseif ispc
+        copystring = ['! xcopy /e /v', ...
+            fullfile(local_path,outputStruct(b).recording_folders{1},'amplifier_analogin_auxiliary_int16.xml'), ' ',...
+            fullfile(local_path,outputStruct(b).sessionName)];
+    end
+    eval(copystring)
+    
+end
+
+%Running KS2Wrapper on the new files
+KS2Wrapper(fullfile(local_path,outputStruct(b).sessionName))

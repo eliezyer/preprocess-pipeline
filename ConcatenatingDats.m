@@ -1,4 +1,4 @@
-function ConcatenatingDats(basepath)
+function outputStruct = ConcatenatingDats(basepath)
 %% This function checks if recordings are missing their respectively session
 % folder, %creates them and copy all the binary files for that sessions
 % concatenated into the session folder.
@@ -8,6 +8,7 @@ function ConcatenatingDats(basepath)
 %developed by Eliezyer de Oliveira 2018
 %updated: EFO 2020
 %% getting all the folder from basepath and selecting which ones need to be concatenated
+outputStruct = [];
 d_init = dir(basepath);
 temp_idx = [d_init.isdir];
 temp_names = {d_init.name};
@@ -150,6 +151,7 @@ if exist('sessionsStructure','var')
         
         %copying the xml from the last folder to the session folder so we
         %can run spike sort on it
+        outputStruct = sessionsStructure;
     end
     
 end
