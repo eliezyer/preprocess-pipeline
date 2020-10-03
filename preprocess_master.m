@@ -23,7 +23,7 @@ for b = 1:length(animal_folders)
         %make a new folder and prevent of re-running the same files a second time
         %or even copying the data again.
         %% NEED TO ADD LINE FOR VERIFICATION OF CONCATENATION
-        outputStruct = ConcatenatingDats(fullfile(local_path,animal_folders{b}(bb)));
+        outputStruct = ConcatenatingDats(fullfile(local_path,animal_folders{b}{bb}));
         
         
         %% Run spike sorting (Kilosort 2 using KS2Wrapper)
@@ -33,22 +33,22 @@ for b = 1:length(animal_folders)
         %This part of the code copies it to the new folder created
         for bbb = 1:length(outputStruct) %looping through the sessions concatenated
             
-            rec_folder = fullfile(local_path,outputStruct(bbb).recording_folders{end});
-            new_folder = fullfile(local_path,outputStruct(bbb).sessionName);
+            rec_folder = fullfile(local_path,animal_folders{b}{bb},outputStruct(bbb).recording_folders{end});
+            new_folder = fullfile(local_path,animal_folders{b}{bb},outputStruct(bbb).sessionName);
             new_name   = outputStruct(bbb).sessionName;
             if isunix
                 copystring = ['! rsync -a -v -W -c -r ', ...
-                    fullfile(rec_folder,'amplifier_analogin_auxiliary_int16.xml'), ' ',...
+                    fullfile(rec_folder,'*.xml'), ' ',...
                     fullfile(new_folder,[new_name '.xml'])];
             elseif ispc %not tested yet (2020/09/11)
                 copystring = ['! xcopy /e /v', ...
-                    fullfile(rec_folder,'amplifier_analogin_auxiliary_int16.xml'), ' ',...
+                    fullfile(rec_folder,'*.xml'), ' ',...
                     fullfile(new_folder,[new_name '.xml'])];
             end
             eval(copystring)
             
             %Running KS2Wrapper on the new files
-            KS2Wrapper(fullfile(local_path,outputStruct(bbb).sessionName))
+            KS2Wrapper(fullfile(local_path,animal_folders{b}{bb},outputStruct(bbb).sessionName))
         end
         
         %% Generate .lfp files from original .dat files

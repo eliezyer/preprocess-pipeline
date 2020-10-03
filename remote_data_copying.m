@@ -78,9 +78,6 @@ for a = 1:length(remote_path)
                 %execute comand in catstring
                 eval(copystring)
             end
-        else
-            %this is just so we don't try to concatenate or run KS on
-            %folders that didn't have new additions.
             aux_animal = [aux_animal;aa];
         end
     end
