@@ -1,4 +1,4 @@
-#Preprocessing steps for ephys and video data.
+*Preprocessing steps for ephys and video data.*
 
 # Introduction
  The preprocess pipeline developed here is to automatize the maximum we can and still allow a customization for each person type of recordings/experiments. You can use and alter it for your purposes with no guarantee that it will work.
@@ -37,10 +37,15 @@ Feel free to use and modify these functions to your own need.
 
  In order to use the scripts for automatic preprocessing of data (spike sort and)
   +-- _Project_folder
+
   |     +-- animal_folder
+
   |     |   +-- session_folder
+
   |     |   |   +-- basename.dat
+
   |     |   |   +-- basename.xml
+  
   |     |   |   +-- _Kilosort_date_time
   |     |   |   |   +-- spike_clusters.npy
   |     |   |   |   +-- spike_times.npy
