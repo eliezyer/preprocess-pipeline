@@ -34,4 +34,6 @@ The main function to use is *preprocess_master.m*. You should just change two va
 1) the variable original_path should be the path of your files on the storage on the network (NAs, recording probox and etc)
 2) the variable local_path is where you want to put these files on your computer for pre-processing (make sure you set up to your SSD to speed up)
 
+More information on the preprocessing steps and functions, see [preprocessing steps](tutorial/steps_preprocessing.md)
+
 That's it, if you have any problems please open an issue on the repository.

@@ -3,10 +3,16 @@ function outputStruct = ConcatenatingDats(basepath)
 % folder, %creates them and copy all the binary files for that sessions
 % concatenated into the session folder.
 %
-% inputs: bsaepath: animal folder to check for new recordings in the NAS;
+% inputs: basepath: animal folder to check for new recordings in the NAS;
 %
 %developed by Eliezyer de Oliveira 2018
 %updated: EFO 2020
+%
+%to do: 
+% [] put error for concatenating size different than the sum of the
+%parts
+% [] extract timestamps on which recording block starts and end
+
 %% getting all the folder from basepath and selecting which ones need to be concatenated
 outputStruct = [];
 d_init = dir(basepath);
