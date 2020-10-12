@@ -36,16 +36,15 @@ Feel free to use and modify these functions to your own need.
 ### Required folder organization
 
  In order to use the scripts for automatic preprocessing of data (spike sort and)
-  +-- _Project_folder
 
-  |     +-- animal_folder
-
+  +-- _Project_folder.
+  |     +-- animal_folder.
   |     |   +-- session_folder
 
   |     |   |   +-- basename.dat
 
   |     |   |   +-- basename.xml
-  
+
   |     |   |   +-- _Kilosort_date_time
   |     |   |   |   +-- spike_clusters.npy
   |     |   |   |   +-- spike_times.npy
