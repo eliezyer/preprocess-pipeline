@@ -37,22 +37,19 @@ Feel free to use and modify these functions to your own need.
 
  In order to use the scripts for automatic preprocessing of data (spike sort and)
 
-  +-- _Project_folder.
-  |     +-- animal_folder.
-  |     |   +-- session_folder
-
-  |     |   |   +-- basename.dat
-
-  |     |   |   +-- basename.xml
-
-  |     |   |   +-- _Kilosort_date_time
-  |     |   |   |   +-- spike_clusters.npy
-  |     |   |   |   +-- spike_times.npy
-  |     |   |   |   +-- cluster_group.tsv
-  |     |   |   |   +-- pc_features.npy
+  +-- _Project_folder  
+  |     +-- animal_folder  
+  |     |   +-- session_folder  
+  |     |   |   +-- basename.dat  
+  |     |   |   +-- basename.xml  
+  |     |   |   +-- _Kilosort_date_time  
+  |     |   |   |   +-- spike_clusters.npy  
+  |     |   |   |   +-- spike_times.npy  
+  |     |   |   |   +-- cluster_group.tsv  
+  |     |   |   |   +-- pc_features.npy  
   |     |   |   |   +-- templates.npy
-  |     |   |   |   +-- rez.mat
-  |     |   |   |   +-- cluster_info.tsv
+  |     |   |   |   +-- rez.mat  
+  |     |   |   |   +-- cluster_info.tsv  
 
  *ADD SCREENSHOTS TO BETTER EXPLAIN?*
 
