@@ -8,18 +8,19 @@ function outputStruct = ConcatenatingDats(basepath)
 %developed by Eliezyer de Oliveira 2018
 %updated: EFO 2020
 %
-%to do: 
-% [] put error for concatenating size different than the sum of the
-%parts
-% [] extract timestamps on which recording block starts and end
+%to do:
+% [] extract timestamps on which recording block starts and end (outside
+% function)
 
 %% getting all the folder from basepath and selecting which ones need to be concatenated
 outputStruct = [];
 d_init = dir(basepath);
 temp_idx = [d_init.isdir];
 temp_names = {d_init.name};
+flag_rec_timestamps = 1;
 
 temp_names = temp_names(temp_idx);
+original_dat_name = 'amplifier_analogin_auxiliary_int16.dat';
 
 %process of exclusion (1): folder name has to have more than 14 characters.
 %this is because of intan default of saving date as _yymmdd_hhmmss.
@@ -64,12 +65,17 @@ if ~isempty(temp_dates)
         folders_order = temp_folders(I);
         
         sessionsStructure(a).recording_folders = folders_order;
+        temp2 = [];
+        for aa = 1:length(folders_order)
+            temp = dir(fullfile(folders_order{aa},original_dat_name));
+            temp2 = [temp2 temp.bytes];
+        end
+        sessionsStructure(a).size_bytes = temp2;
     end
 end
 
 %% running data concatenation only if there is data to concatenate
 
-original_dat_name = 'amplifier_analogin_auxiliary_int16.dat';
 if exist('sessionsStructure','var')
     for a = 1:length(sessionsStructure)
         basename = sessionsStructure(a).sessionName;
@@ -98,7 +104,7 @@ if exist('sessionsStructure','var')
             catstring = ['! cat ', cs, ' > ',newdatpath];
         elseif ispc%As of 4/9/2017 - never tested
             if length(datpaths)>1
-                for didx = 1:length(datpaths);
+                for didx = 1:length(datpaths)
                     datpathsplus{didx} = [datpaths{didx} '+'];
                 end
             else
@@ -111,14 +117,16 @@ if exist('sessionsStructure','var')
         eval(catstring)%execute concatention
         disp(['Done concatenating ' basename '.dat file'])
         % Check that size of resultant .dat is equal to the sum of the components
-        % t = dir(newdatpath);
-        % recordingbytes = SessionMetadata.ExtracellEphys.Files.Bytes;
-        % if t.bytes ~= sum(recordingbytes)
-        %     error('New .dat size not right.  Exiting')
-        %     return
-        % else
-        %     disp(['Primary .dats concatenated successfully'])
-        % end
+        t = dir(newdatpath);
+        recordingbytes = sum(sessionsStructure(a).size_bytes);
+        if t.bytes ~= sum(recordingbytes)
+            error('New .dat size not right.  Exiting')
+            return
+        else
+            disp(['Primary .dats concatenated successfully'])
+        end
+        
+
         
         %% concatenating other dat types
         otherdattypes = {'analogin';'digitalin';'auxiliary';'time';'supply'};
@@ -145,19 +153,45 @@ if exist('sessionsStructure','var')
             eval(catstring)%execute concatenation
             disp(['Done concatenating ' basename ' ' otherdattypes{odidx} '.dat'])
             % Check that size of resultant .dat is equal to the sum of the components
-            %     t = dir(tnewdatpath);
-            %     eval(['recordingbytes = ' otherdattypes{odidx} 'datsizes;'])
-            %     if t.bytes ~= sum(recordingbytes)
-            %         error(['New ' otherdattypes{odidx} '.dat size not right.  Exiting after .dats converted.  Not deleting'])
-            %         deleteoriginaldatsbool = 0;
-            %     else
-            
-            %     end
+            t = dir(tnewdatpath);
+            fold_size = [];
+            for aa = 1:length(sessionsStructure(a).recording_folders)
+               temp = dir(fullfile(sessionsStructure(a).recording_folders{aa},[otherdattypes{odidx} '.dat']));
+               fold_size = [fold_size temp.bytes];
+            end
+
+            if t.bytes ~= sum(fold_size)
+                error(['New ' otherdattypes{odidx} '.dat size not right.  Exiting after .dats converted.'])
+            else
+                disp([otherdattypes{odidx} '.dats concatenated successfully'])
+            end
         end
         
-        %copying the xml from the last folder to the session folder so we
+        %% copying the xml from the last folder to the session folder so we
         %can run spike sort on it
+        xml2copy = fullfile(sessionsStructure(a).recording_folders{end},...
+            [original_dat_name(1:end-4) '.xml']);
+        if isunix
+            copystring = ['! rsync -a -v -W -c -r ', ...
+                fullfile(basepath,xml2copy),' ',...
+                fullfile(basepath,basename,[basename '.xml'])];
+        elseif ispc
+            copystring = ['! xcopy /e /v', ...
+                fullfile(basepath,xml2copy),' ',...
+                fullfile(basepath,basename,[basename '.xml'])];
+        end
+        eval(copystring)
+        
+        %% creating a structure with the recording folder start times
+        % and name of the folders
+        if flag_rec_timestamps
+            xml_file = LoadXml(xml2copy);
+            [recording_intervals] = extract_recordings_folder_start(basepath,sessionsStructure(a),original_dat_name,xml_file);
+            save(fullfile(basepath,basename,'recording_intervals.mat'),'recording_intervals')
+        end
+        %% output structure to use in further preprocessing
         outputStruct = sessionsStructure;
     end
+    
     
 end
