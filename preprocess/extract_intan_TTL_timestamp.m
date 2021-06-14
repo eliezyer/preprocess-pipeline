@@ -16,6 +16,7 @@ function [digital_input_ts] = extract_intan_TTL_timestamp(basedir)
 if nargin <1
     basedir = pwd;
 end
+cd(basedir)
 %% get sampling rate from xml file
 temp = dir('*.xml');
 xml_file = LoadXml(temp.name);

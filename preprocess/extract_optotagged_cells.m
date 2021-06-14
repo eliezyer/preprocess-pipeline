@@ -10,15 +10,25 @@ spikes = bz_GetSpikes;
 load('digital_input_ts.mat')
 d = digital_input_ts;
 pulse_intervals = [];
-for a = 1:length(d.channel)
+for a = 1:12length(d.channel)
     
     start_ch = d.channel(a).start;
     stop_ch  = d.channel(a).stop;
     %first I have to identify the blocks
     if ~isempty(start_ch)
-        thresh = median(diff(start_ch))+std(diff(start_ch)); %threshold for space between pulses
+        thresh = median(diff(start_ch))+3; %threshold for space between pulses
         
         block_stim = [1 find(diff(start_ch)>thresh)+1 length(start_ch')];
+        %cleaning block stim that is smaller than 5 stimulation (there
+        %should be 50) if block_stim size is bigger than 11
+        if length(block_stim)>11
+            keep= [find(diff(start_ch(block_stim))<2700) length(block_stim)];
+            block_stim2 = block_stim(keep);
+            keep2 = [find(diff(block_stim2)>5) length(block_stim2)];
+            block_stim3 = block_stim2(keep2);
+            block_stim = block_stim3;
+        end
+        
         for aa = 1:length(block_stim)-1
             block_interval = [block_stim(aa):block_stim(aa+1)-1];
             pulse_intervals{a,aa} = [start_ch(block_interval); stop_ch(block_interval)]';
@@ -37,7 +47,7 @@ for a = 1:size(pulse_intervals,1) %channel loop
         spike_in  = [];
         spike_out = [];
         p = [];
-         for aaa = 1:length(pulse_intervals{a,aa})
+         for aaa = 1:size(pulse_intervals{a,aa},1)
             spike_in(aaa,:) = cellfun(@(x) length(Restrict(x,pulse_intervals{a,aa}(aaa,:))),spikes.times);
             spike_out(aaa,:) = cellfun(@(x) length(Restrict(x,[pulse_intervals{a,aa}(aaa,1)-0.05 pulse_intervals{a,aa}(aaa,1)])),spikes.times);
          end

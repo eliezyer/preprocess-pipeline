@@ -1,4 +1,4 @@
-function extract_arduino_2afc_data(basepath)
+function arduino_2afc = extract_arduino_2afc_data(basepath)
 %function to extract behavioral data from arduino log file and save it as a
 %structure. This is mostly to make it easier to compare with the pokes
 %recorded on intan and being able to align both data for analysis.
@@ -19,7 +19,7 @@ try
     load(fullfile(basepath,'mouse_info.mat'))
     load(fullfile(basepath,'session_info.mat'))
 catch
-    warning(['Unable to find .mat files in ' basedir]);
+    warning(['Unable to find .mat files in ' basepath]);
     return
 end
 
